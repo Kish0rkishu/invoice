@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import Barcode from 'react-barcode';
 import { Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { Close } from '@mui/icons-material'
-
+import axios from 'axios'
 function PdfTemplate(props) {
     const ref = useRef();
     const [openAirPopup, setAirPopup] = useState(false);
@@ -18,7 +18,7 @@ function PdfTemplate(props) {
     // const [productName, setProductName] = useState('');
     // const [productAmout, setProductAmount] = useState(0);
 
-    const [Total, setTotal ] = useState(0);
+    const [total, setTotal ] = useState(0);
 
     const [List, setList] = useState([]);
 
@@ -27,6 +27,7 @@ function PdfTemplate(props) {
             product: Item,
             amount: Amount,
         })
+
         console.log(List);
         setItem('')
         setAmount('')
@@ -39,7 +40,21 @@ function PdfTemplate(props) {
     })
     // setTotal(sum)
     console.log(`Sum is = ${sum}`);
-
+     const totals=sum
+    
+    function pushdata(){
+        axios.post('http://localhost:5000/register',{totals})
+        .then((response)=>{
+            const result=response.data
+            if(result){
+                alert('data pushed')
+                setTotal('')
+            }
+        })
+        .catch(()=>{
+            alert('data not pushed')
+        })
+    }
     return (
         <>
             <div className="container" ref={ref} >
@@ -113,6 +128,7 @@ function PdfTemplate(props) {
                                                 <td className="text-right"><h4><strong>Total:</strong></h4></td>
                                                 <td className="text-left"><h4><strong><i className="fas fa-rupee-sign" area-hidden="true"></i> ₹ {sum} </strong></h4></td>
                                             </tr>
+                                            <button onClick={pushdata}>push</button>
                                         </tbody>
                                     </table>
                                 </div>
